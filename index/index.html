@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ff5733;
+            height: 100vh;
+        }
+        .quiz-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        .question-container {
+            margin-bottom: 20px;
+        }
+
+        .answers-container {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .answer-option {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .feedback-container {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .media-container {
+            margin-bottom: 20px;
+        }
+
+        .media-container img,
+        .media-container video {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .emoji-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .emoji-frame {
+            border: 3px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .emoji {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <title>კითხვები მის მერლინს</title>
+</head>
+<body>
+    <div class="container quiz-container">
+        <div id="question-container" class="question-container">
+        </div>
+        <div id="answers-container" class="answers-container">
+        </div>
+        <button class="btn btn-success" onclick="checkAnswer()">პასუხის დადასტურება</button>
+        <button id="next-question-btn" class="btn btn-primary" onclick="nextQuestion()">შემდეგი კითხვა</button>
+        <div id="feedback-container" class="feedback-container">
+        </div>
+        <div id="media-container" class="media-container">
+        </div>
+        <div id="sad-face-container" class="emoji-container" style="display: none;">
+            <div class="emoji-frame">
+                <img id="sad-face" class="emoji" src="24.jpeg" alt="გულლლ">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { 
+                question: 'მზად ხარ პასუხების გასაცემად??', 
+                answers: ['დიახ', 'კი', 'რათქმაუნდა', 'კი ჩემო სიცოცხლევ'], 
+                correctAnswer: 'კი ჩემო სიცოცხლევ', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'image', sources: ['1.jpg', '5.jpg', '14.jpeg'] },
+            },
+            { 
+                question: 'დღე როდესაც ჩვენ "ჩვენ" გავხდით?', 
+                answers: ['20', '22', '21', '15'], 
+                correctAnswer: '21', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'video', source: '18.mp4' },
+            },
+            { 
+                question: 'ჩვენი პირველი მანქანის ზედმეტსახელი?', 
+                answers: ['გარფილდი', 'დათვი', 'ჟირაფი', 'კნუტი'], 
+                correctAnswer: 'დათვი', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'image', sources: ['37.jpeg', '36.jpeg', '19.jpeg'] },
+            },
+            { 
+                question: 'როდის წავედით ერთად დაბადების დღეზე?', 
+                answers: ['15', '9', '22', '31 და 9'], 
+                correctAnswer: '31 და 9', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'image', sources: ['32.jpeg', '38.jpeg'] },
+            },
+            { 
+                question: 'რას ეხება ჩვენი არტი?', 
+                answers: ['ფეხი', 'თავი', 'ხელი', 'ტვინი'], 
+                correctAnswer: 'ხელი', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'video', source: '7.mp4' },
+                media: { type: 'video', source: '8.mp4' },
+                media: { type: 'video', source: '31.mp4' },
+                media: { type: 'image', sources: ['28.jpeg', '39.jpeg'] },
+            },
+            { 
+                question: 'ყველაზე მეტად რით ვგავართ ერთმანეთს??', 
+                answers: ['გიჟობები', 'გემოვნებით', 'სითბოთი', 'საერთოდ ყველაფრით'], 
+                correctAnswer: 'საერთოდ ყველაფრით', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'video', source: '2.mp4' },
+                media: { type: 'video', source: '8.mp4' },
+                media: { type: 'video', source: '31.mp4' },
+                media: { type: 'image', sources: ['28.jpeg', '39.jpeg'] },
+            },
+            { 
+                question: 'კლასიკურად გამოწყობილები სად ვიყავით ერთად?', 
+                answers: ['დაბადების დღეზე', 'გარეთ', 'ქორწილში', 'არსად'], 
+                correctAnswer: 'ქორწილში', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'image', sources: ['23.jpeg', '25.jpeg'] },
+            },
+            { 
+                question: 'ეხლა კი მზად ხარ იხილო ჩვენი და დათვის(ორივე) ისტორიები?', 
+                answers: ['ერთი სული მაქვს'], 
+                correctAnswer: 'ერთი სული მაქვს', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'video', source: '3.mp4' },
+                media: { type: 'video', source: '4.mp4' },
+                media: { type: 'video', source: '12.mp4' },
+                media: { type: 'video', source: '10.mp4' },
+                media: { type: 'video', source: '11.mp4' },
+                media: { type: 'image', sources: ['29.jpeg', '22.jpeg', '17.jpeg'] },
+            },
+            { 
+                question: 'და ამჟამად ბოლოს ის რაც გვაერთიანებს გვაძლიერებს ჩვენ ! ძალიან მიყვარხარ მარიამ !', 
+                answers: ['ჩვენ ჩვენ და სამუდამოდ ჩვენ !!!'], 
+                correctAnswer: 'ჩვენ ჩვენ და სამუდამოდ ჩვენ !!!', 
+                feedback: 'სწოორიააა ^_^ ^_^', 
+                media: { type: 'video', source: '9.mp4' },
+                media: { type: 'image', sources: ['6.jpg', '26.jpeg', '27.jpeg', '33.jpeg', '34.jpeg', '35.jpeg'] },
+            },
+            // Add more questions as needed
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function displayQuestion() {
+            const questionContainer = document.getElementById('question-container');
+            const answersContainer = document.getElementById('answers-container');
+            const mediaContainer = document.getElementById('media-container');
+            const sadFaceContainer = document.getElementById('sad-face-container');
+            const currentQuestion = questions[currentQuestionIndex];
+
+            // Display the question
+            questionContainer.innerHTML = `<p>${currentQuestion.question}</p>`;
+
+            // Display the answer options
+            answersContainer.innerHTML = currentQuestion.answers.map((answer, index) => `
+                <div class="answer-option">
+                    <input type="radio" name="answer" value="${answer}" id="answer${index + 1}">
+                    <label for="answer${index + 1}">${answer}</label>
+                </div>
+            `).join('');
+
+            // Clear previous media content
+            mediaContainer.innerHTML = '';
+
+            // Hide the sad face container
+            sadFaceContainer.style.display = 'none';
+        }
+
+        function checkAnswer() {
+            const feedbackContainer = document.getElementById('feedback-container');
+            const mediaContainer = document.getElementById('media-container');
+            const sadFaceContainer = document.getElementById('sad-face-container');
+            const sadFace = document.getElementById('sad-face');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+
+            const currentQuestion = questions[currentQuestionIndex];
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+
+            if (selectedAnswer) {
+                if (selectedAnswer.value === currentQuestion.correctAnswer) {
+                    feedbackContainer.textContent = currentQuestion.feedback;
+
+                    // Display multiple images or video based on the question type
+                    if (currentQuestion.media.type === 'image') {
+                        currentQuestion.media.sources.forEach(source => {
+                            const image = document.createElement('img');
+                            image.src = source;
+                            mediaContainer.appendChild(image);
+                        });
+                    } else if (currentQuestion.media.type === 'video') {
+                        const video = document.createElement('video');
+                        video.src = currentQuestion.media.source;
+                        video.controls = true;
+                        mediaContainer.appendChild(video);
+                    }
+
+                    // Hide the sad face container
+                    sadFaceContainer.style.display = 'none';
+
+                    // Show the Next Question button
+                    nextQuestionBtn.style.display = 'inline-block';
+                } else {
+                    feedbackContainer.innerHTML = 'არ ველოდი თუ შეგეშლებოდა :(.';
+                    
+                    // Display the sad face container
+                    sadFaceContainer.style.display = 'flex';
+
+                    // Show the sad face photo
+                    sadFace.style.display = 'block';
+
+                    // Hide the Next Question button if the answer is incorrect
+                    nextQuestionBtn.style.display = 'none';
+                }
+            } else {
+                feedbackContainer.textContent = 'რომელიმეე აირჩიეეე !.';
+            }
+        }
+
+        function nextQuestion() {
+            const feedbackContainer = document.getElementById('feedback-container');
+            const mediaContainer = document.getElementById('media-container');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const sadFaceContainer = document.getElementById('sad-face-container');
+            const sadFace = document.getElementById('sad-face');
+
+            // Clear previous feedback and media content
+            feedbackContainer.textContent = '';
+            mediaContainer.innerHTML = '';
+
+            // Move to the next question
+            currentQuestionIndex++;
+
+            // Check if there are more questions
+            if (currentQuestionIndex < questions.length) {
+                // Display the next question
+                displayQuestion();
+
+                // Clear the radio button selection
+                const radioButtons = document.querySelectorAll('input[name="answer"]');
+                radioButtons.forEach(button => (button.checked = false));
+
+                // Hide the sad face container
+                sadFaceContainer.style.display = 'none';
+
+                // Hide the sad face photo
+                sadFace.style.display = 'none';
+
+                // Hide the Next Question button
+                nextQuestionBtn.style.display = 'none';
+            } else {
+                // Display a message when all questions are answered
+                questionContainer.innerHTML = '<p>კითხვები დასრულდა ^_^ </p>';
+                nextQuestionBtn.style.display = 'none'; // Hide the Next Question button
+            }
+        }
+
+        // Initialize the quiz
+        displayQuestion();
+    </script>
+</body>
+</html>

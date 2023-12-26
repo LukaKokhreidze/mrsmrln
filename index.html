@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            color: #ff5733;
+            height: 100vh; 
+        }
+
+#imageContainer {
+            width: 300px;
+            height: 200px;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+        .startup-container {
+            background-image: url('startup_background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .startup-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        .media-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center; 
+            margin-top: 20px;
+        }
+
+        .media {
+            width: 200px; 
+            height: 200px; 
+            margin: 0 10px 20px 10px; 
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            margin: 5% auto;
+            padding: 20px;
+            width: 80%;
+            position: relative;
+        }
+
+.close {
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+    <title>Media Page</title>
+</head>
+<body>
+
+
+
+
+    <div class="media-container">
+        <img class="media" src="15.jpeg" alt="Photo 2" onclick="openModal('15.jpeg')">
+        <img class="media" src="16.jpeg" alt="Photo 3" onclick="openModal('16.jpeg')">
+        <img class="media" src="21.jpeg" alt="Photo 5" onclick="openModal('21.jpeg')">
+        <img class="media" src="32.jpeg" alt="Photo 7" onclick="openModal('32.jpeg')">
+
+        <img class="media" src="scr1.jpeg" alt="Photo 3" onclick="openModal('scr1.png')">
+        <img class="media" src="scr2.jpeg" alt="Photo 5" onclick="openModal('scr2.png')">
+        <img class="media" src="scr3.jpeg" alt="Photo 7" onclick="openModal('scr3.png')">
+
+        <video class="media" controls onclick="openModal('13.mp4')">
+            <source src="13.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+<video class="media" controls onclick="openModal('20.mp4')">
+            <source src="20.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+<video class="media" controls onclick="openModal('30.mp4')">
+            <source src="30.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- Add more photos and videos as needed -->
+    </div>
+
+    <!-- Modal for displaying photos and videos -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" style="width: 100%; height: auto;">
+            <video id="modalVideo" controls style="width: 100%; height: auto;">
+                <source id="videoSource" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <a href="index/index.html" class="startup-button">დავიწყოთ კითხვები</a>
+
+    <script>
+        function openModal(mediaSrc) {
+            var modal = document.getElementById("myModal");
+            var modalImage = document.getElementById("modalImage");
+            var modalVideo = document.getElementById("modalVideo");
+            var videoSource = document.getElementById("videoSource");
+
+            if (mediaSrc.endsWith('.jpg') || mediaSrc.endsWith('.jpeg') || mediaSrc.endsWith('.png')) {
+                modalImage.src = mediaSrc;
+                modalImage.style.display = "block";
+                modalVideo.style.display = "none";
+            } else if (mediaSrc.endsWith('.mp4')) {
+                videoSource.src = mediaSrc;
+                modalVideo.load();
+                modalVideo.style.display = "block";
+                modalImage.style.display = "none";
+            }
+
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+var modalImage = document.getElementById("modalImage");
+            var modalVideo = document.getElementById("modalVideo");
+
+            modalImage.style.display = "none";
+            modalVideo.style.display = "none";
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>
